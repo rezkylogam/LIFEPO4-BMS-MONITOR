@@ -1,256 +1,87 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MPPT Solar Monitoring</title>
+  <title>MPPT SOLAR MONITORING - DASHBOARD</title>
+  
+  <!-- Load Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Tailwind Configuration for custom color/font (Dark Blue / Cyan Theme) -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'dark-bg': '#0D1117',      // Sangat Gelap (Hampir Hitam)
+            'card-bg': '#161B22',      // Abu-abu Gelap (Untuk Panel)
+            'accent-main': '#00FFFF',  // Cyan Terang (Primary Accent - Menonjol)
+            'accent-secondary': '#38BDF8', // Biru Langit (Secondary Accent)
+            'text-light': '#FFFFFF',   // Teks Putih Penuh
+            'success-green': '#10B981', // Hijau Emerald (Status OK)
+            'border-color': '#30363D', // Border Abu-abu Sedang
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+  <!-- Inter Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+  
+  <!-- External Libraries -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1"></script>
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js"></script>
+  
   <style>
+    /* Mengganti CSS internal lama dengan Tailwind untuk body dan container */
     * {
       box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
-    
     body {
-      background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
-      color: #333;
-      padding: 20px;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      font-family: 'Inter', sans-serif;
     }
-    
-    .container {
-      width: 100%;
-      max-width: 1200px;
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 20px;
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-      overflow: hidden;
-      padding: 25px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
+
+    /* Styling Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
     }
-    
-    header {
-      text-align: center;
-      padding: 15px 0;
-      border-bottom: 3px solid #3498db;
-      margin-bottom: 10px;
-    }
-    
-    h1 {
-      color: #2c3e50;
-      font-size: 2.5rem;
-      margin-bottom: 10px;
-      text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
-    }
-    
-    h2 {
-      color: #3498db;
-      font-size: 1.5rem;
-    }
-    
-    .dashboard {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-    }
-    
-    .data-panel {
-      background: linear-gradient(to bottom right, #f8f9fa, #e9ecef);
-      border-radius: 15px;
-      padding: 20px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-    }
-    
-    .panel-title {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 15px;
-      padding-bottom: 10px;
-      border-bottom: 2px solid #3498db;
-    }
-    
-    .panel-title h3 {
-      color: #2c3e50;
-      font-size: 1.4rem;
-    }
-    
-    #data-container {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 15px;
-      max-height: 300px;
-      overflow-y: auto;
-      padding: 10px;
+    ::-webkit-scrollbar-track {
+      background: #161B22; /* card-bg */
       border-radius: 10px;
-      background: #fff;
-      box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
     }
-    
-    .data-card {
-      background: white;
+    ::-webkit-scrollbar-thumb {
+      background: #30363D; /* border-color */
       border-radius: 10px;
-      padding: 15px;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-      transition: all 0.3s ease;
-      border-left: 4px solid #3498db;
     }
-    
-    .data-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569; 
     }
-    
-    .data-card h4 {
-      color: #2c3e50;
-      font-size: 1rem;
-      margin-bottom: 8px;
-      text-transform: uppercase;
-    }
-    
-    .data-value {
-      font-size: 1.4rem;
-      font-weight: bold;
-      color: #e74c3c;
-    }
-    
-    .controls {
-      display: flex;
-      gap: 15px;
-      flex-wrap: wrap;
-      align-items: center;
-      padding: 15px;
-      background: #f8f9fa;
-      border-radius: 15px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-    }
-    
-    .date-picker {
-      flex: 1;
-      min-width: 200px;
-    }
-    
+
+    /* Custom style for Flatpickr input to match the dark theme */
     .flatpickr-input {
-      width: 100%;
-      padding: 12px 15px;
-      border: 2px solid #3498db;
-      border-radius: 8px;
-      font-size: 1rem;
-      background: white;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      color: #FFFFFF;
+      background-color: #0D1117; /* dark-bg */
+      border: 1px solid #30363D;
+      transition: all 0.2s;
+    }
+
+    .flatpickr-input:focus {
+      border-color: #00FFFF; /* accent-main */
+      box-shadow: 0 0 0 2px rgba(0, 255, 255, 0.3);
     }
     
-    .btn {
-      padding: 12px 25px;
-      background: linear-gradient(to right, #3498db, #2c3e50);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1rem;
-      font-weight: bold;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    }
-    
-    .btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 6px 8px rgba(0,0,0,0.15);
-      background: linear-gradient(to right, #2c3e50, #3498db);
-    }
-    
-    .btn:active {
-      transform: translateY(1px);
-    }
-    
-    .chart-container {
-      position: relative;
-      height: 400px;
-      background: white;
-      border-radius: 15px;
-      padding: 20px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-    }
-    
-    .chart-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-    
-    .chart-title {
-      color: #2c3e50;
-      font-size: 1.3rem;
-      font-weight: bold;
-    }
-    
-    .zoom-instructions {
-      color: #7f8c8d;
-      font-size: 0.9rem;
-      text-align: center;
-      padding: 10px;
-      background: #f8f9fa;
-      border-radius: 8px;
-      margin-top: 15px;
-    }
-    
-    .sensors {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 15px;
-      padding: 20px;
-      background: #f8f9fa;
-      border-radius: 15px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-    }
-    
-    .sensor-item {
-      display: flex;
-      align-items: center;
-      background: white;
-      padding: 10px 15px;
-      border-radius: 30px;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.08);
-    }
-    
-    .sensor-item input {
-      margin-right: 8px;
-      cursor: pointer;
-    }
-    
-    .sensor-item label {
-      cursor: pointer;
-      font-weight: 500;
-    }
-    
-    #loader {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 10;
-      display: none;
-    }
-    
+    /* Style for the loader spinner */
     .loader-spinner {
       width: 60px;
       height: 60px;
-      border: 8px solid #f3f3f3;
-      border-top: 8px solid #3498db;
+      border: 8px solid #30363D;
+      border-top: 8px solid #00FFFF; 
       border-radius: 50%;
       animation: spin 1.5s linear infinite;
     }
@@ -260,146 +91,149 @@
       100% { transform: rotate(360deg); }
     }
     
-    .status-bar {
-      display: flex;
-      justify-content: space-between;
-      padding: 10px 20px;
-      background: #2c3e50;
-      color: white;
-      border-radius: 8px;
-      font-size: 0.9rem;
+    /* Tambahan untuk menyesuaikan Chart.js di tema gelap */
+    .chart-container {
+      /* Tinggi yang sudah memadai */
+      height: 450px; 
     }
-    
-    .mqtt-status {
-      display: flex;
-      align-items: center;
-      gap: 8px;
+
+    /* Custom Alert Modal Styling */
+    .custom-alert-modal-content {
+        max-width: 400px;
+        width: 90%;
+        background-color: #161B22;
+        color: #FFFFFF;
     }
-    
-    .status-indicator {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: #e74c3c;
-    }
-    
-    .status-indicator.connected {
-      background: #2ecc71;
-    }
-    
-    @media (max-width: 900px) {
-      .dashboard {
-        grid-template-columns: 1fr;
-      }
-      
-      #data-container {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
-    
-    @media (max-width: 600px) {
-      #data-container {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      
-      .controls {
-        flex-direction: column;
-      }
-      
-      .date-picker, .btn {
-        width: 100%;
-      }
-    }
-    
-    @media (max-width: 400px) {
-      #data-container {
-        grid-template-columns: 1fr;
-      }
-      
-      h1 {
-        font-size: 2rem;
-      }
-    }
-    
-    /* Scrollbar styling */
-    ::-webkit-scrollbar {
-      width: 8px;
-    }
-    
-    ::-webkit-scrollbar-track {
-      background: #f1f1f1;
-      border-radius: 10px;
-    }
-    
-    ::-webkit-scrollbar-thumb {
-      background: #3498db;
-      border-radius: 10px;
-    }
-    
-    ::-webkit-scrollbar-thumb:hover {
-      background: #2980b9;
+
+    /* Override Flatpickr Dark Theme */
+    .flatpickr-calendar {
+        background-color: #161B22 !important;
+        border-color: #30363D !important;
     }
   </style>
 </head>
-<body>
-  <div class="container">
-    <header>
-      <h1>MPPT Solar Monitoring System</h1>
-      <h2>Real-time Performance Tracking </h2>
+<body class="bg-dark-bg min-h-screen p-4 md:p-8 text-text-light antialiased flex justify-center items-start">
+  
+  <!-- Custom Alert Modal (Ganti fungsi alert() asli) -->
+  <div id="custom-alert-modal" class="fixed inset-0 bg-black bg-opacity-70 z-50 flex justify-center items-center hidden">
+    <div class="custom-alert-modal-content p-6 rounded-xl shadow-2xl border border-accent-main">
+        <h4 class="text-2xl font-bold text-accent-main mb-3" id="alert-title"></h4>
+        <p class="text-text-light mb-5" id="alert-message"></p>
+        <button class="w-full p-3 rounded-lg bg-accent-main text-dark-bg font-semibold hover:bg-cyan-400 transition-colors" id="alert-ok-btn">OK</button>
+    </div>
+  </div>
+
+
+  <div class="container w-full max-w-7xl bg-card-bg rounded-2xl shadow-2xl space-y-8 p-6 md:p-10 border border-border-color">
+    
+    <!-- HEADER & STATUS BAR BARU -->
+    <header class="pb-4 border-b border-border-color">
+      <!-- Row 1: Title -->
+      <div class="mb-2">
+        <h1 class="text-3xl md:text-4xl font-extrabold text-white tracking-wide">
+          MPPT TECHFINE 60A MONITORING
+        </h1>
+        <h2 class="text-md font-light text-accent-main hidden sm:block">
+          Pelacakan Kinerja Energi Surya Real-time By Rezky Logam
+        </h2>
+      </div>
+
+      <!-- Row 2: MQTT Status and Last Update (Diperkuat) -->
+      <div class="flex justify-between items-center p-3 rounded-lg bg-dark-bg border border-border-color shadow-inner">
+        <!-- MQTT Status -->
+        <div class="mqtt-status flex items-center gap-2">
+          <div class="status-indicator w-3 h-3 rounded-full bg-red-500 shadow-lg shadow-red-700/30" id="mqtt-indicator"></div>
+          <span id="mqtt-status-text" class="text-white font-semibold text-sm">Connecting to Server...</span>
+        </div>
+        <!-- Last Update -->
+        <div class="last-update text-accent-secondary text-sm">
+            Last Update: <span id="update-time" class="font-mono text-text-light">Just now</span>
+        </div>
+      </div>
     </header>
     
-    <div class="status-bar">
-      <div class="mqtt-status">
-        <div class="status-indicator" id="mqtt-indicator"></div>
-        <span id="mqtt-status-text">Connecting to Server...</span>
-      </div>
-      <div class="last-update">Last Update: <span id="update-time">Just now</span></div>
-    </div>
-    
-    <div class="dashboard">
-      <div class="data-panel">
-        <div class="panel-title">
-          <h3>Real-time Data</h3>
-          <div class="solar-status">
-            <span class="status active">● ACTIVE</span>
+    <!-- DASHBOARD PANELS -->
+    <div class="dashboard space-y-6">
+      
+      <!-- REAL-TIME DATA PANEL (Paling atas, menonjolkan ringkasan data) -->
+      <div class="data-panel bg-dark-bg p-6 rounded-xl shadow-lg border-t-4 border-accent-main">
+        <div class="panel-title flex justify-between items-center pb-4 mb-4 border-b border-border-color">
+          <h3 class="text-2xl font-semibold text-white">Data Sensor Saat Ini</h3>
+          <div class="solar-status flex items-center space-x-2">
+            <span class="text-success-green font-bold text-sm">● ACTIVE</span>
           </div>
         </div>
-        <div id="data-container">
+        
+        <!-- Grid Data Real-time - Kepadatan 3/4/5/6 kolom (Simple & Penuh) -->
+        <div id="data-container" class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 p-1">
           <!-- Data cards will be inserted here by MQTT -->
+          <!-- Contoh Card Awal -->
+            <div class="data-card bg-card-bg rounded-lg p-3 shadow-md border-l-4 border-accent-secondary transition-transform duration-300 hover:scale-[1.03] hover:bg-card-bg/80">
+              <h4 class="text-xs font-semibold uppercase text-gray-400 mb-0.5">Volt PV</h4>
+              <div class="data-value text-xl font-extrabold text-accent-secondary">0.00 V</div>
+            </div>
         </div>
       </div>
       
-      <div class="data-panel">
-        <div class="panel-title">
-          <h3>History Data</h3>
-        </div>
-        <div class="controls">
-          <div class="date-picker">
-            <input type="text" id="datePicker" placeholder="Select Date" class="flatpickr-input">
+      <!-- CHART CONTAINER (Tepat di bawah Data Real-time) -->
+      <div class="chart-wrapper flex flex-col space-y-6">
+        <div class="chart-container relative bg-dark-bg rounded-2xl p-6 shadow-2xl border border-border-color flex-grow">
+          <div class="chart-header flex flex-col md:flex-row justify-between items-start md:items-center mb-4 pb-4 border-b border-border-color">
+            <div class="chart-title text-2xl font-semibold text-white mb-2 md:mb-0">Grafik Kinerja Seiring Waktu</div>
+            
+            <!-- Elemen ini diubah untuk menempatkan tips di samping tombol -->
+            <div class="flex flex-col md:flex-row items-start md:items-center space-y-2 md:space-y-0 md:space-x-4">
+                 <p class="zoom-instructions text-xs text-gray-400 text-center md:text-left">
+                    Tips: Scroll Wheel / Shift + Drag untuk Zoom/Pan
+                </p>
+                <button onclick="chart.resetZoom()" class="text-sm px-4 py-1.5 bg-card-bg text-accent-secondary rounded-full hover:bg-border-color transition-colors font-bold border border-border-color">Reset Zoom</button>
+            </div>
+            
           </div>
-          <button id="requestButton" class="btn">Get Data</button>
-          <button id="exportButton" class="btn">Export CSV</button>
+          
+          <div id="loader" class="absolute inset-0 flex flex-col justify-center items-center bg-dark-bg/90 rounded-2xl z-10 hidden">
+            <div class="loader-spinner"></div>
+            <p class="mt-4 text-accent-main font-semibold text-lg">Memuat Data...</p>
+          </div>
+          
+          <canvas id="lineChart"></canvas>
+          
         </div>
+      </div>
+      
+      <!-- HISTORY CONTROL PANEL (Panel Kontrol Gabungan di Paling Bawah) -->
+      <div class="data-panel bg-dark-bg p-6 rounded-xl shadow-lg border border-border-color">
+        <h3 class="text-2xl font-semibold text-accent-main mb-4 border-b border-border-color pb-2">Kontrol Data Historis & Filter</h3>
         
-        <div class="sensors" id="checkboxContainer">
-          <!-- Checkboxes will be inserted here when data is loaded -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          <!-- Kolom 1: Pengambilan Data -->
+          <div class="flex flex-col space-y-3">
+            <label for="datePicker" class="block text-sm font-medium text-gray-400">Pilih Tanggal Log:</label>
+            <input type="text" id="datePicker" placeholder="Pilih Tanggal Log" class="flatpickr-input w-full p-3 rounded-lg text-base">
+            
+            <button id="requestButton" class="btn p-3 rounded-lg font-bold text-lg bg-accent-main text-dark-bg hover:bg-cyan-400 transition-colors shadow-lg shadow-cyan-500/30">
+              GET DATA
+            </button>
+            <button id="exportButton" class="btn p-3 rounded-lg font-bold text-lg bg-accent-secondary text-dark-bg hover:bg-sky-400 transition-colors shadow-lg shadow-sky-500/30">
+              EXPORT CSV
+            </button>
+          </div>
+
+          <!-- Kolom 2 & 3 (Gabungan di Desktop) -->
+          <div class="lg:col-span-2">
+            <h4 class="text-lg font-semibold text-accent-secondary mb-3 border-b border-border-color pb-2">Filter Sensor Grafik:</h4>
+            <div class="sensors grid grid-cols-2 md:grid-cols-3 gap-3 p-2 bg-card-bg rounded-xl shadow-inner border border-border-color" id="checkboxContainer">
+              <p class="text-sm text-gray-400 col-span-full">Checkboxes akan muncul setelah data log dimuat...</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
     
-    <div class="chart-container">
-      <div class="chart-header">
-        <div class="chart-title">Performance Metrics Over Time</div>
-      </div>
-      <div id="loader">
-        <div class="loader-spinner"></div>
-      </div>
-      <canvas id="lineChart"></canvas>
-     
-    </div>
-    
-    <div class="system-info">
-      <p>@Product By <a href="https://www.facebook.com/Fatkhur.etos2012/">Fatkhur Rohman </a> WA Contact <a href="https://wa.me/628972309993">WA Contact</a> </p>
+    <!-- FOOTER -->
+    <div class="system-info text-center pt-4 border-t border-border-color text-sm text-gray-400">
+      <p>@Product By <a href="https://web.facebook.com/muhammad.rezky.184/" class="text-accent-main hover:underline">Rezky Logam</a> | Kontak WA: <a href="https://wa.me/6285249402703" class="text-accent-main hover:underline">+6285249402703</a></p>
     </div>
   </div>
 
@@ -407,10 +241,26 @@
 
     let idalat = "9193904";
     let topic_alat = "9193904/mpptlogger";
-    // Initialize Flatpickr
+    
+    // Inisialisasi Flatpickr
     const datePicker = flatpickr("#datePicker", {
       defaultDate: new Date(),
       dateFormat: "Y/m/d",
+      // Theme customization for dark mode
+       onReady: function(selectedDates, dateStr, instance) {
+        instance.calendarContainer.classList.add('bg-card-bg', 'text-text-light', 'border-border-color');
+        instance.calendarContainer.querySelectorAll('.flatpickr-day').forEach(day => {
+            day.style.color = '#FFFFFF';
+        });
+        instance.calendarContainer.querySelectorAll('.flatpickr-day.selected').forEach(day => {
+            day.style.backgroundColor = '#00FFFF'; // accent-main (Cyan)
+            day.style.borderColor = '#00FFFF';
+            day.style.color = '#0D1117'; // Dark text on accent
+        });
+        instance.calendarContainer.querySelectorAll('.flatpickr-day.today').forEach(day => {
+            day.style.borderColor = '#00FFFF';
+        });
+      }
     });
 
     // Register the zoom plugin
@@ -424,6 +274,8 @@
     let csv_like_data = "";
     let chart = null;
     let datasets = [];
+    // Ganti palet warna agar sesuai dengan tema Dark Blue/Cyan
+    const colorPool = ['#00FFFF', '#38BDF8', '#10B981', '#FACC15', '#EF4444', '#6366F1', '#EC4899']; 
 
     // Connect to the broker
     client.connect({
@@ -435,15 +287,15 @@
 
     function onConnect() {
       console.log('Connected to broker');
-      document.getElementById('mqtt-status-text').textContent = 'Connected to Server';
-      document.getElementById('mqtt-indicator').className = 'status-indicator connected';
-      client.subscribe('9193904/#');
+      document.getElementById('mqtt-status-text').textContent = 'Terhubung';
+      document.getElementById('mqtt-indicator').className = 'status-indicator w-3 h-3 rounded-full bg-success-green shadow-lg shadow-success-green/30';
+      client.subscribe('14751036/#');
     }
 
     function onFailure(error) {
       console.error('Connection failed: ', error);
-      document.getElementById('mqtt-status-text').textContent = 'Connection failed. Retrying...';
-      document.getElementById('mqtt-indicator').className = 'status-indicator';
+      document.getElementById('mqtt-status-text').textContent = 'Koneksi gagal';
+      document.getElementById('mqtt-indicator').className = 'status-indicator w-3 h-3 rounded-full bg-red-500 shadow-lg shadow-red-700/30';
       
       // Retry connection after 5 seconds
       setTimeout(() => {
@@ -461,11 +313,9 @@
       const topic = message.destinationName;
       const payload = message.payloadString;
       
-      
       // Update last update time
       updateTime();
-    //   console.log(topic,payload);
-
+     
         if (topic == "9193904/mpptloggerlog") {
           if(is_request_log == true){
             if (payload.indexOf("Time") >= 0) {
@@ -474,7 +324,6 @@
             csv_like_data = payload + '\n'
           } else if (payload.indexOf("endOfFile") >= 0) {
             console.log("End transfer logger -> update chart");
-            // unshowAn();
             hideLoader();
             parseCSVData(csv_like_data);
             is_request_log=false;
@@ -483,7 +332,8 @@
             console.log("Data Not available, or broken storage!");
             
             is_request_log=false;
-            alert("Data Not available, or broken storage!");
+            // Mengganti alert() asli dengan custom modal
+            showCustomAlert("Peringatan", "Data tidak tersedia atau penyimpanan rusak!");
           } else {
             csv_like_data += payload + '\n'
           }
@@ -493,9 +343,20 @@
         } else{
           updateData(topic, payload);
         }
-
-     
     };
+    
+    // Custom Alert/Modal function (replacing default alert)
+    function showCustomAlert(title, message) {
+        let modal = document.getElementById('custom-alert-modal');
+        document.getElementById('alert-title').textContent = title;
+        document.getElementById('alert-message').textContent = message;
+        modal.classList.remove('hidden');
+
+        // Setup close handler once
+        document.getElementById('alert-ok-btn').onclick = function() {
+            modal.classList.add('hidden');
+        };
+    }
 
     // Initialize chart
     function initChart(labels, datasets) {
@@ -513,9 +374,22 @@
         options: {
           responsive: true,
           maintainAspectRatio: false,
+          // PENAMBAHAN: Tambahkan padding di bagian bawah untuk memberi ruang pada label sumbu-X
+          layout: {
+             padding: {
+                bottom: 15 // Menambah 15px padding di bagian bawah grafik
+             }
+          },
           plugins: {
             legend: {
-              display: false
+              display: false 
+            },
+            tooltip: {
+                backgroundColor: 'rgba(22, 27, 34, 0.9)', // card-bg
+                titleColor: '#00FFFF', // accent-main
+                bodyColor: '#FFFFFF',
+                borderColor: '#30363D',
+                borderWidth: 1,
             },
             zoom: {
               pan: {
@@ -543,17 +417,18 @@
               type: 'category',
               title: {
                 display: true,
-                text: 'Time (Hour:Minute)',
-                color: '#2c3e50',
+                text: 'Time (Hour:Minute)', 
+                color: '#00FFFF',
                 font: {
                   weight: 'bold',
                   size: 14
                 }
               },
               grid: {
-                color: 'rgba(0, 0, 0, 0.05)'
+                color: 'rgba(48, 54, 61, 0.4)' 
               },
               ticks: {
+                color: '#94a3b8', // Gray for ticks
                 maxRotation: 0,
                 autoSkip: true,
                 maxTicksLimit: 12
@@ -563,14 +438,17 @@
               title: {
                 display: true,
                 text: 'Value',
-                color: '#2c3e50',
+                color: '#00FFFF',
                 font: {
                   weight: 'bold',
                   size: 14
                 }
               },
               grid: {
-                color: 'rgba(0, 0, 0, 0.05)'
+                color: 'rgba(48, 54, 61, 0.4)'
+              },
+              ticks: {
+                color: '#94a3b8',
               }
             }
           },
@@ -588,36 +466,110 @@
 
     // Function to update data in the grid
     function updateData(topic, payload) {
-      // Extract the sensor name from the topic (after '3012036/mppt2/')
-      if(topic.includes("life")){
+      const sensorName = topic.substring(20);
+      
+      // Logic for dynamic display name and color based on sensor type
+      let displayName = sensorName.replace(/([A-Z])/g, ' $1').trim().toUpperCase();
+      let unit = '';
+      let valueColor = 'text-accent-main'; 
 
+      if (sensorName.toLowerCase().includes('volt')) {
+        unit = ' V';
+        valueColor = 'text-accent-secondary'; // Biru Langit
+      } else if (sensorName.toLowerCase().includes('amp')) {
+        unit = ' A';
+        valueColor = 'text-success-green'; // Hijau Emerald
+      } else if (sensorName.toLowerCase().includes('power') || sensorName.toLowerCase().includes('watt')) {
+        unit = ' W';
+        valueColor = 'text-red-400';
+      } else if (sensorName.toLowerCase().includes('temp')) {
+        unit = ' °C';
+        valueColor = 'text-pink-400';
       }
-      else if (topic.includes("cmd")) {
+      
+      // LOGIKA BARU: Khusus untuk status yang digabung (misal: "status")
+      if (sensorName.toLowerCase() === 'status' && payload.includes(';') && payload.includes('-')) {
+        
+        const statusSegments = payload.split(';');
+        const container = document.getElementById('data-container');
+        
+        statusSegments.forEach((segment, index) => {
+          if (!segment.trim()) return; // Skip empty segments
+          
+          const parts = segment.split('-'); // e.g., ["OUT", "OFF"]
+          if (parts.length < 2) return;
+          
+          const primaryName = parts[0].trim().toUpperCase(); // OUT, CHG, BAT
+          const primaryValue = parts.slice(1).join('-').trim().toUpperCase(); // OFF, NOTFULL
+          
+          // Generate a unique key for the sub-status
+          const subSensorKey = `status-${primaryName}`;
 
-      }
-      else if (topic.includes("life")) {
+          // Define color based on status value
+          let statusColor;
+          let displayValue;
 
+          if (primaryValue === 'OFF' || primaryValue.includes('NOT')) {
+              statusColor = 'text-red-500'; // Merah untuk OFF/NOT
+              displayValue = primaryValue;
+          } else if (primaryValue === 'ON' || primaryValue === 'FULL' || primaryValue.includes('STB')) {
+              statusColor = 'text-success-green'; // Hijau untuk ON/FULL/STB
+              displayValue = primaryValue;
+          } else {
+              statusColor = 'text-accent-main';
+              displayValue = primaryValue;
+          }
+
+          let card = document.querySelector(`.data-card[data-sensor="${subSensorKey}"]`);
+          
+          if (!card) {
+            card = document.createElement('div');
+            card.className = 'data-card bg-card-bg rounded-lg p-3 shadow-md border-l-4 border-accent-secondary transition-transform duration-300 hover:scale-[1.03] hover:bg-card-bg/80';
+            card.dataset.sensor = subSensorKey;
+            card.innerHTML = `
+              <h4 class="text-xs font-semibold uppercase text-gray-400 mb-0.5">${primaryName} STATUS</h4>
+              <div class="data-value text-xl font-extrabold ${statusColor}">${displayValue}</div>
+            `;
+            // Sisipkan ke container
+            container.appendChild(card);
+          } else {
+            // Update the existing card
+            const dataValue = card.querySelector('.data-value');
+            card.querySelector('h4').textContent = `${primaryName} STATUS`;
+            dataValue.className = `data-value text-xl font-extrabold ${statusColor}`;
+            dataValue.textContent = displayValue;
+          }
+        });
+        
+        // Hapus card "STATUS" yang asli (jika ada) setelah memecah datanya
+        let originalCard = document.querySelector(`.data-card[data-sensor="status"]`);
+        if (originalCard) {
+            originalCard.remove();
+        }
+        
+        return; // Hentikan fungsi updateData agar tidak membuat card "status" asli
       }
-      else if (topic.includes("newdata")) {} 
-      else if (topic.includes("newcmd")) {} 
-      else{
-          const sensorName = topic.substring(19);
+
+      // Lanjutan logika asli untuk data sensor tunggal (non-status)
+      const formattedPayload = isNaN(parseFloat(payload)) ? payload : (parseFloat(payload).toFixed(2) + unit);
+
       // Find or create the data card for this sensor
       let card = document.querySelector(`.data-card[data-sensor="${sensorName}"]`);
       if (!card) {
         card = document.createElement('div');
-        card.className = 'data-card';
+        card.className = 'data-card bg-card-bg rounded-lg p-3 shadow-md border-l-4 border-accent-secondary transition-transform duration-300 hover:scale-[1.03] hover:bg-card-bg/80';
         card.dataset.sensor = sensorName;
         card.innerHTML = `
-          <h4>${sensorName}</h4>
-          <div class="data-value">${payload}</div>
+          <h4 class="text-xs font-semibold uppercase text-gray-400 mb-0.5">${displayName}</h4>
+          <div class="data-value text-xl font-extrabold ${valueColor}">${formattedPayload}</div>
         `;
         document.getElementById('data-container').appendChild(card);
       } else {
-        card.querySelector('.data-value').textContent = payload;
+        card.querySelector('h4').textContent = displayName;
+        const dataValue = card.querySelector('.data-value');
+        dataValue.className = `data-value text-xl font-extrabold ${valueColor}`;
+        dataValue.textContent = formattedPayload;
       }
-      }
-    
     }
 
     // Function to parse CSV data and update the chart
@@ -643,17 +595,24 @@
         }
       });
       
+      let colorIndex = 0;
       // Prepare datasets for chart
-      datasets = Object.keys(dataSets).map((name, i) => ({
-        label: name,
-        data: dataSets[name],
-        borderColor: `hsl(${(i * 130) % 360}, 70%, 50%)`,
-        borderWidth: 2,
-        fill: false,
-        hidden: i >= 3, // Only show first three by default
-        pointRadius: 0,
-        tension: 0.4
-      }));
+      datasets = Object.keys(dataSets).map((name, i) => {
+        const color = colorPool[colorIndex % colorPool.length];
+        colorIndex++;
+
+        return {
+          label: name,
+          data: dataSets[name],
+          borderColor: color,
+          borderWidth: 2,
+          fill: false,
+          hidden: i >= 3, // Only show first three by default
+          pointRadius: 1,
+          pointHoverRadius: 5,
+          tension: 0.4
+        };
+      });
       
       // Update the chart
       initChart(labels, datasets);
@@ -667,14 +626,15 @@
       
       datasets.forEach((dataset, index) => {
         const div = document.createElement('div');
-        div.className = 'sensor-item';
+        div.className = 'sensor-item flex items-center p-2 rounded-lg bg-dark-bg transition-colors duration-200 hover:bg-border-color cursor-pointer';
         
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
         checkbox.checked = !dataset.hidden;
         checkbox.id = `checkbox-${index}`;
         checkbox.dataset.index = index;
-        checkbox.style.accentColor = dataset.borderColor;
+        checkbox.className = 'mr-2 h-4 w-4 rounded border-gray-700 checked:bg-accent-main checked:border-accent-main focus:ring-accent-main transition-colors duration-150';
+        checkbox.style.accentColor = dataset.borderColor; // Set accent color dynamically
         
         checkbox.addEventListener('change', function() {
           const idx = parseInt(this.dataset.index);
@@ -685,7 +645,8 @@
         const label = document.createElement('label');
         label.htmlFor = `checkbox-${index}`;
         label.textContent = dataset.label;
-        label.style.color = dataset.borderColor;
+        label.className = 'font-medium select-none text-sm';
+        label.style.color = dataset.borderColor; // Use line color for label
         
         div.appendChild(checkbox);
         div.appendChild(label);
@@ -706,17 +667,21 @@
     
     // Show loader
     function showLoader() {
-      document.getElementById('loader').style.display = 'block';
+      document.getElementById('loader').classList.remove('hidden');
     }
     
     // Hide loader
     function hideLoader() {
-      document.getElementById('loader').style.display = 'none';
+      document.getElementById('loader').classList.add('hidden');
     }
     
     // Handle Get Data button click
     document.getElementById('requestButton').addEventListener('click', function() {
       const selectedDate = datePicker.input.value;
+      if (!selectedDate) {
+        showCustomAlert("Peringatan", "Silakan pilih tanggal terlebih dahulu.");
+        return;
+      }
       const command = `1#${selectedDate}`;
       console.log('Requesting data:', command);
       client.send('9193904/mpptlogger/cmd', command);
@@ -728,7 +693,7 @@
     // Export button handler
     document.getElementById('exportButton').addEventListener('click', function() {
       if (!csv_like_data) {
-        alert('No data to export!');
+        showCustomAlert('Peringatan', 'Tidak ada data log untuk diekspor. Silakan ambil data historis terlebih dahulu.');
         return;
       }
       
@@ -747,5 +712,5 @@
     initChart([], []);
   </script>
 </body>
-
 </html>
+
