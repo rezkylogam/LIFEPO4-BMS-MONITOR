@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MPPT Solar Monitoring - Dashboard</title>
+  <title>MPPT SOLAR MONITORING - DASHBOARD</title>
   
   <!-- Load Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -131,10 +131,10 @@
       <!-- Row 1: Title -->
       <div class="mb-2">
         <h1 class="text-3xl md:text-4xl font-extrabold text-white tracking-wide">
-          MPPT Solar Monitoring
+          MPPT TECHFINE 60A MONITORING
         </h1>
         <h2 class="text-md font-light text-accent-main hidden sm:block">
-          Pelacakan Kinerja Energi Surya Real-time
+          Pelacakan Kinerja Energi Surya Real-time By Rezky Logam
         </h2>
       </div>
 
@@ -233,14 +233,14 @@
     
     <!-- FOOTER -->
     <div class="system-info text-center pt-4 border-t border-border-color text-sm text-gray-400">
-      <p>@Product By <a href="https://www.facebook.com/Fatkhur.etos2012/" class="text-accent-main hover:underline">Fatkhur Rohman</a> | Kontak WA: <a href="https://wa.me/628972309993" class="text-accent-main hover:underline">+62 897 230 9993</a></p>
+      <p>@Product By <a href="https://web.facebook.com/muhammad.rezky.184/" class="text-accent-main hover:underline">Rezky Logam</a> | Kontak WA: <a href="https://wa.me/6285249402703" class="text-accent-main hover:underline">+6285249402703</a></p>
     </div>
   </div>
 
   <script>
 
-    let idalat = "14751036";
-    let topic_alat = "14751036/mpptlogger";
+    let idalat = "9193904";
+    let topic_alat = "9193904/mpptlogger";
     
     // Inisialisasi Flatpickr
     const datePicker = flatpickr("#datePicker", {
@@ -289,7 +289,7 @@
       console.log('Connected to broker');
       document.getElementById('mqtt-status-text').textContent = 'Terhubung';
       document.getElementById('mqtt-indicator').className = 'status-indicator w-3 h-3 rounded-full bg-success-green shadow-lg shadow-success-green/30';
-      client.subscribe('14751036/#');
+      client.subscribe('9193904/#');
     }
 
     function onFailure(error) {
@@ -316,7 +316,7 @@
       // Update last update time
       updateTime();
      
-        if (topic == "14751036/mpptloggerlog") {
+        if (topic == "9193904/mpptloggerlog") {
           if(is_request_log == true){
             if (payload.indexOf("Time") >= 0) {
             console.log("start transfer logger");
@@ -684,7 +684,7 @@
       }
       const command = `1#${selectedDate}`;
       console.log('Requesting data:', command);
-      client.send('14751036/mpptlogger/cmd', command);
+      client.send('9193904/mpptlogger/cmd', command);
       is_request_log = true;
       csv_like_data = "";
       showLoader();
@@ -713,3 +713,4 @@
   </script>
 </body>
 </html>
+
