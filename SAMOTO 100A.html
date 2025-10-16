@@ -131,7 +131,7 @@
       <!-- Row 1: Title -->
       <div class="mb-2">
         <h1 class="text-3xl md:text-4xl font-extrabold text-white tracking-wide">
-          MPPT TECHFINE 60A MONITORING
+          MPPT SAMOTO 100A MONITORING
         </h1>
         <h2 class="text-md font-light text-accent-main hidden sm:block">
           Pelacakan Kinerja Energi Surya Real-time By Rezky Logam
@@ -239,8 +239,8 @@
 
   <script>
 
-    let idalat = "9193904";
-    let topic_alat = "9193904/mpptlogger";
+    let idalat = "14751036";
+    let topic_alat = "14751036/mpptlogger";
     
     // Inisialisasi Flatpickr
     const datePicker = flatpickr("#datePicker", {
@@ -289,7 +289,7 @@
       console.log('Connected to broker');
       document.getElementById('mqtt-status-text').textContent = 'Terhubung';
       document.getElementById('mqtt-indicator').className = 'status-indicator w-3 h-3 rounded-full bg-success-green shadow-lg shadow-success-green/30';
-      client.subscribe('9193904/#');
+      client.subscribe('14751036/#');
     }
 
     function onFailure(error) {
@@ -316,7 +316,7 @@
       // Update last update time
       updateTime();
      
-        if (topic == "9193904/mpptloggerlog") {
+        if (topic == "14751036/mpptloggerlog") {
           if(is_request_log == true){
             if (payload.indexOf("Time") >= 0) {
             console.log("start transfer logger");
@@ -684,7 +684,7 @@
       }
       const command = `1#${selectedDate}`;
       console.log('Requesting data:', command);
-      client.send('9193904/mpptlogger/cmd', command);
+      client.send('14751036/mpptlogger/cmd', command);
       is_request_log = true;
       csv_like_data = "";
       showLoader();
@@ -713,6 +713,7 @@
   </script>
 </body>
 </html>
+
 
 
 
