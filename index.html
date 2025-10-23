@@ -555,7 +555,7 @@ function renderCards(datane) {
             </div>
           </div>
           <div class="mt-4 pt-3 border-t border-gray-100 text-xs text-gray-500 flex justify-between">
-            <span>Cycles: ${batt.}</span>
+            <span>Cycles: ${batt.cycles}</span>
             <span class="last-update"><i class="far fa-clock mr-1"></i>${batt.time}</span>
           </div>
         `;
@@ -619,7 +619,7 @@ function renderCards(datane) {
       document.getElementById("modalTitle").textContent = `${batt.typeBattery} #${batt.addr}`;
       document.getElementById("modalSOC").textContent = `${batt.soc}%`;
       document.getElementById("modalSOH").textContent = `${batt.soh}%`;
-      document.getElementById("modalCycles").textContent = batt.cycles;
+      document.getElementById("modalCycles").textContent = batt.;
       document.getElementById("modalVoltage").textContent = `${batt.voltage} V`;
       document.getElementById("modalBusVoltage").textContent = `${batt.busVoltage} V`;
       document.getElementById("modalCurrent").textContent = `${batt.current} A`;
