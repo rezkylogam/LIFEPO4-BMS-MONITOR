@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AE BMS ONLINE</title>
+  <title>BMS HUAWEI MONITORING</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -191,7 +191,7 @@
       <div class="bg-white/20 p-2 rounded-lg mr-3">
         <i class="fas fa-car-battery text-2xl"></i>
       </div>
-      <h1 class="text-2xl font-bold">AE BMS MONITORING</h1>
+      <h1 class="text-2xl font-bold">HUAWEI BMS MONITORING By Rezky Logam</h1>
     </div>
 
     <div class="flex items-center space-x-4">
@@ -273,9 +273,43 @@
   <main class="flex-1 p-4 sm:p-6 w-full">
     <div class="max-w-7xl mx-auto">
       <div class="mb-6 flex justify-between items-center">
-        <h2 class="text-xl font-semibold text-gray-500">Battery Systems</h2>
+        <h2 class="text-xl font-semibold text-gray-500">Baterai Sistem 48V DC</h2>
         <div class="text-sm text-gray-500">
-          <span id="total-batteries">0</span> batteries connected
+          <span id="total-batteries">0</span> Baterai Terkoneksi
+        </div>
+      </div>
+
+      <!-- Summary Section -->
+      <div id="summarySection" class="mb-8 hidden">
+        <h3 class="text-lg font-semibold text-light gray-850 mb-4">Ringkasan Keseluruhan</h3>
+        <div class="summary-card rounded-xl shadow-sm p-5">
+          <div class="grid grid-cols-2 md:grid-cols-5 gap-4 text-sm">
+            <div class="space-y-1">
+              <i class="fa fa-bolt" style="color: yellow;"></i>
+              <div class="text-light gray-1000">Total Tegangan</div>
+              <div id="avg-voltage" class="font-semibold text-white-1500">-</div>
+            </div>
+            <div class="space-y-1">
+              <i class="fa fa-battery-full" style="color: green;"></i>
+              <div class="text-light gray-1000">Total SOC</div>
+              <div id="avg-soc" class="font-semibold text-white-1500">-</div>
+            </div>
+            <div class="space-y-1">
+              <i class="fa fa-heart" style="color: blue;"></i>
+              <div class="text-light gray-1000">Total SOH</div>
+              <div id="avg-soh" class="font-semibold text-white-1500">-</div>
+            </div>
+            <div class="space-y-1">
+              <i class="fa fa-tachometer" style="color: orange;"></i>
+              <div class="text-light gray-1000">Total Arus</div>
+              <div id="total-current" class="font-semibold text-white-1500">-</div>
+            </div>
+            <div class="space-y-1">
+              <i class="fa fa-bolt" style="color: red;"></i>
+              <div class="text-light gray-1000">Total Daya</div>
+              <div id="total-power" class="font-semibold text-white-1500">-</div>
+            </div>
+          </div>
         </div>
       </div>
       
@@ -295,8 +329,8 @@
 <footer class="bg-gray-800 text-gray-300 py-4 w-full">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col items-center text-center">
     <div class="text-sm">
-      © 2025 BMS Monitor System |
-      <a href="https://wa.me/628972309993" class="no-underline hover:text-white">
+      © 2025-2026 BMS Monitoring Sistem |
+      <a href="https://wa.me/6285249402703" class="no-underline hover:text-white">
         Hubungi Developer
       </a>
       <label id="id_monitoring_footer" style="display:none;"></label>
