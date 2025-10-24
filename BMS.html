@@ -697,7 +697,6 @@ function renderCards(datane) {
       document.getElementById("avg-soh").textContent = `${(totalSoh / count).toFixed(1)}%`;
       document.getElementById("total-current").textContent = `${totalCurrent.toFixed(2)} A`;
       document.getElementById("total-power").textContent = `${totalPower.toFixed(2)} W`;
-      document.getElementById("avg-temp").textContent = `${(totalTemp / count).toFixed(105)} &deg;C`;
     }
 
     // Open modal
@@ -933,6 +932,7 @@ themeToggleLink.addEventListener('click', (e) => {
 </body>
 
 </html>
+
 
 
 
