@@ -140,9 +140,9 @@
       transition: background-color 0.3s, color 0.3s;
     }
 
-    body[data-theme="dark"] header {
-      background-color: #1f2937;
-      color: #ffffff;
+    body[style*="background-image"] header {
+      background-color: rgba(4, 85, 209, 0.9);
+      backdrop-filter: blur(5px);
     }
 
     /* Footer */
@@ -152,22 +152,24 @@
       transition: background-color 0.3s, color 0.3s;
     }
 
-    body[data-theme="dark"] footer {
-      background-color: #111827;
-      color: #d1d5db;
+    body[data-theme="dark"][style*="background-image"] header {
+      background-color: rgba(31, 31, 31, 0.9);
+      color: #ffffff;
+      backdrop-filter: blur(5px);
     }
 
     /* Summary Card */
     .summary-card {
       background-color: var(--card-lapis);
       color: var(--card-text);
-      border-left: 5px solid var(--primary);
+      border-left: 5px solid var(--primary);  
     }
   </style>
 </head>
-<body class="min-h-screen flex flex-col">
+<body class="bg-gray-50 min-h-screen flex flex-col">
 <!-- Header -->
-<header id="mainHeader" class="bg-gradient-to-r text-white shadow-lg w-full relative">
+<!-- Menambahkan class z-40 ke header untuk konteks penumpukan -->
+<header id="mainHeader" class="bg-gradient-to-r text-white shadow-lg w-full relative z-40">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-2 flex justify-between items-center">
     <div class="flex items-center">
       <div class="bg-white/20 p-2 rounded-lg mr-3">
@@ -965,6 +967,7 @@ themeToggleLink.addEventListener('click', (e) => {
 </body>
 
 </html>
+
 
 
 
