@@ -26,9 +26,11 @@
     
     body {
       font-family: 'Inter', sans-serif;
-      background-color: var(--light);
-      color: var(--dark);
-      transition: background-color 0.3s, color 0.3s;
+      /* Style untuk Custom Background */
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed; /* Membuat background tidak ikut scroll */
+      transition: background-color 0.3s, background-image 0.5s, color 0.3s;
     }
     
     body[data-theme="dark"] {
@@ -132,11 +134,22 @@
     #id_monitoring_footer {
       display: none;
     }
+    
+    /* Override untuk Custom Background */
+    body:not([style*="background-image"]) {
+        background-color: #ffffff;
+        color: #000000;
+    }
 
-    /* Header */
+    body[data-theme="dark"]:not([style*="background-image"]) {
+      background-color: #111;
+      color: #222;
+    }
+
+    /* Header ikut dark mode */
     header {
       background-color: #0455D1;
-      color: #ffffff;
+      color: #000000;
       transition: background-color 0.3s, color 0.3s;
     }
 
@@ -998,6 +1011,7 @@ themeToggleLink.addEventListener('click', (e) => {
 </body>
 
 </html>
+
 
 
 
