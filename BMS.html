@@ -189,24 +189,14 @@
       color: #ffffff;
       backdrop-filter: blur(5px);
     }
-    
-    /* Footer */
-    footer {
-      background-color: #1f2937;
-      color: #9ca3af;
-      transition: background-color 0.3s, color 0.3s;
+
+    .battery-card i {
+      /* tidak usah pakai var() */
     }
 
-    body[data-theme="dark"] footer {
-      background-color: #111827;
-      color: #d1d5db;
-    }
-
-    /* Summary Card */
-    .summary-card {
-      background-color: var(--card-lapis);
-      color: var(--card-text);
-      border-left: 5px solid var(--primary);  
+    /* khusus dark kita override */
+    body.dark .battery-card i {
+      
     }
   </style>
 </head>
@@ -1011,6 +1001,7 @@ themeToggleLink.addEventListener('click', (e) => {
 </body>
 
 </html>
+
 
 
 
