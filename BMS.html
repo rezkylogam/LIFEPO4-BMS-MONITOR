@@ -217,6 +217,40 @@
   </div>
 </div>
 
+<!-- Modal Ganti Background -->
+<div id="backgroundModal" class="fixed inset-0 bg-black/50 flex items-center justify-center hidden z-50">
+  <div class="bg-white rounded-xl shadow-2xl max-w-sm w-full p-6 relative">
+    <button id="closeBackgroundModal" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
+      <i class="fas fa-times"></i>
+    </button>
+    <h2 class="text-xl font-bold text-gray-800 mb-4">Ganti Background Gambar</h2>
+
+    <p class="text-sm text-gray-600 mb-4">Pilih gambar (JPG/PNG) untuk dijadikan latar belakang. Gambar akan disimpan di browser Anda.</p>
+
+    <input type="file" id="imageFileInput" accept="image/jpeg, image/png" class="block w-full text-sm text-gray-500
+      file:mr-4 file:py-2 file:px-4
+      file:rounded-full file:border-0
+      file:text-sm file:font-semibold
+      file:bg-blue-50 file:text-blue-700
+      hover:file:bg-blue-100
+    ">
+    
+    <div class="mt-6 flex justify-between items-center">
+      <button id="removeBackgroundBtn" class="bg-red-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-600 transition disabled:bg-red-300" disabled>
+        Hapus Background
+      </button>
+      <button id="applyBackgroundBtn" class="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition" disabled>
+        Terapkan
+      </button>
+    </div>
+    <div id="loadingMessage" class="hidden mt-4 text-sm text-blue-600 text-center">
+      Memproses gambar...
+    </div>
+  </div>
+</div>
+<!-- End Modal Ganti Background -->
+
+  
   <!-- Main content -->
   <main class="flex-1 p-4 sm:p-6 w-full">
     <div class="max-w-7xl mx-auto">
@@ -931,6 +965,7 @@ themeToggleLink.addEventListener('click', (e) => {
 </body>
 
 </html>
+
 
 
 
