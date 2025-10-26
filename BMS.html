@@ -190,12 +190,16 @@
         </button>
 
         <!-- Dropdown Menu -->
+        <!-- Mengubah z-50 menjadi z-55 agar selalu di atas modal (modal menggunakan z-50) -->
         <div id="dropdownMenu"
-          class="absolute right-0 mt-2 w-44 bg-white text-gray-800 rounded-lg shadow-lg hidden">
+          class="absolute right-0 mt-2 w-48 bg-white text-gray-800 rounded-lg shadow-lg hidden z-55">
+            <a id="batteryConfigLink" href="#" class="block px-4 py-2 hover:bg-gray-100">⚙️ Device Config</a>
             <a id="networkBtn" href="#" class="block px-4 py-2 hover:bg-gray-100">📡 Network</a>
             <a id="pollingState" href="#" class="block px-4 py-2 hover:bg-gray-100">PollingState</a>
+            <a id="timerLink" href="#" class="block px-4 py-2 hover:bg-gray-100">⏱ Timer</a>
           <hr class="my-1">
           <a id="themeToggleLink" href="#" class="block px-4 py-2 hover:bg-gray-100">🌙 Dark Mode</a>
+          <a id="backgroundBtn" href="#" class="block px-4 py-2 hover:bg-gray-100">🖼️ Ganti Background</a>
         </div>
       </div>
     </div>
@@ -927,6 +931,7 @@ themeToggleLink.addEventListener('click', (e) => {
 </body>
 
 </html>
+
 
 
 
