@@ -214,6 +214,7 @@
             <a id="batteryConfigLink" href="#" class="block px-4 py-2 hover:bg-gray-100">⚙️ Device Config</a>
             <a id="networkBtn" href="#" class="block px-4 py-2 hover:bg-gray-100">📡 Network</a>
             <a id="timerLink" href="#" class="block px-4 py-2 hover:bg-gray-100">⏱ Timer</a>
+            <a id="pollingState" href="#" class="block px-4 py-2 hover:bg-gray-100">PollingState</a>
           <hr class="my-1">
           <a id="themeToggleLink" href="#" class="block px-4 py-2 hover:bg-gray-100">🌙 Dark Mode</a>
           <a id="backgroundBtn" href="#" class="block px-4 py-2 hover:bg-gray-100">🖼️ Ganti Background</a>
@@ -276,6 +277,40 @@
         <h2 class="text-xl font-semibold text-gray-500">Battery Systems</h2>
         <div class="text-sm text-gray-500">
           <span id="total-batteries">0</span> batteries connected
+        </div>
+      </div>
+
+      <!-- Summary Section -->
+      <div id="summarySection" class="mb-8 hidden">
+        <h3 class="text-lg font-semibold text-light gray-850 mb-4">Ringkasan Keseluruhan</h3>
+        <div class="summary-card rounded-xl shadow-sm p-5">
+          <div class="grid grid-cols-2 md:grid-cols-5 gap-4 text-lg">
+            <div class="space-y-1">
+              <i class="fa fa-bolt" style="color: yellow;"></i>
+              <div class="text-light gray-1000">Total Tegangan</div>
+              <div id="avg-voltage" class="font-semibold text-white-1500">-</div>
+            </div>
+            <div class="space-y-1">
+              <i class="fa fa-battery-full" style="color: green;"></i>
+              <div class="text-light gray-1000">Total SOC</div>
+              <div id="avg-soc" class="font-semibold text-white-1500">-</div>
+            </div>
+            <div class="space-y-1">
+              <i class="fa fa-heart" style="color: blue;"></i>
+              <div class="text-light gray-1000">Total SOH</div>
+              <div id="avg-soh" class="font-semibold text-white-1500">-</div>
+            </div>
+            <div class="space-y-1">
+              <i class="fa fa-tachometer" style="color: orange;"></i>
+              <div class="text-light gray-1000">Total Arus</div>
+              <div id="total-current" class="font-semibold text-white-1500">-</div>
+            </div>
+            <div class="space-y-1">
+              <i class="fa fa-bolt" style="color: red;"></i>
+              <div class="text-light gray-1000">Total Daya</div>
+              <div id="total-power" class="font-semibold text-white-1500">-</div>
+            </div>
+          </div>
         </div>
       </div>
       
