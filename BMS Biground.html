@@ -179,6 +179,23 @@
     /* khusus dark kita override */
     body.dark .battery-card i {
 
+     /* Footer */
+    footer {
+      background-color: #1f2937;
+      color: #9ca3af;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    body[data-theme="dark"] footer {
+      background-color: #111827;
+      color: #d1d5db;
+    }
+
+    /* Summary Card */
+    .summary-card {
+      background-color: var(--card-lapis);
+      color: var(--card-text);
+      border-left: 5px solid var(--primary); 
     }
   </style>
 </head>
